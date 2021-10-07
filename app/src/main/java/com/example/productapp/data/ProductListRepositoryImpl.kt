@@ -1,5 +1,7 @@
 package com.example.productapp.data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.productapp.domain.ProductItem
 import com.example.productapp.domain.ProductListRepository
 import java.lang.RuntimeException
@@ -7,6 +9,7 @@ import java.lang.RuntimeException
 object ProductListRepositoryImpl: ProductListRepository {
 
     private val productList = mutableListOf<ProductItem>()
+    private val productListLD = MutableLiveData<List<ProductItem>>()
 
     private var autoIncrementId = 0
 
@@ -14,12 +17,13 @@ object ProductListRepositoryImpl: ProductListRepository {
         if (productItem.id == ProductItem.UNDEFINED_ID){
             productItem.id = autoIncrementId++
         }
-        productItem.id = autoIncrementId++
         productList.add(productItem)
+        updateList()
     }
 
     override fun deleteProductItem(productItem: ProductItem) {
         productList.remove(productItem)
+        updateList()
     }
 
     override fun editProductItem(productItem: ProductItem) {
@@ -33,7 +37,11 @@ object ProductListRepositoryImpl: ProductListRepository {
             it.id == productItemId } ?: throw RuntimeException("Element with id $productItemId not found")
     }
 
-    override fun getProductList(): List<ProductItem> {
-        return productList.toList()
+    override fun getProductList(): LiveData<List<ProductItem>> {
+        return productListLD
+    }
+
+    private fun updateList() {
+        productListLD.value = productList.toList()
     }
 }
