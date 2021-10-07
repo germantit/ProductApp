@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.productapp.R
+import com.example.productapp.domain.ProductItem
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,5 +26,10 @@ class MainActivity : AppCompatActivity() {
         val rvProductList = findViewById<RecyclerView>(R.id.rv_product_list)
         adapter = ProductListAdapter()
         rvProductList.adapter = adapter
+        adapter.onProductLongClickListener = object : ProductListAdapter.OnProductLongClickListener {
+            override fun onProductLongClick(productItem: ProductItem) {
+                viewModel.deleteProductItem(productItem)
+            }
+        }
     }
 }

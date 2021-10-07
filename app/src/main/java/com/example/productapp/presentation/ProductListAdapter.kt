@@ -16,6 +16,8 @@ class ProductListAdapter: RecyclerView.Adapter<ProductListAdapter.ProductItemVie
         notifyDataSetChanged()
     }
 
+    var onProductLongClickListener: OnProductLongClickListener? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.product_item,
                 parent,
@@ -27,6 +29,10 @@ class ProductListAdapter: RecyclerView.Adapter<ProductListAdapter.ProductItemVie
         val productItem = productList[position]
         holder.tvName.text = productItem.name
         holder.tvCount.text = productItem.count.toString()
+        holder.itemView.setOnLongClickListener {
+            onProductLongClickListener?.onProductLongClick(productItem)
+            true
+        }
     }
 
     override fun getItemCount(): Int {
@@ -36,5 +42,9 @@ class ProductListAdapter: RecyclerView.Adapter<ProductListAdapter.ProductItemVie
     class ProductItemViewHolder(view: View): RecyclerView.ViewHolder(view){
         val tvName = view.findViewById<TextView>(R.id.tv_name)
         val tvCount = view.findViewById<TextView>(R.id.tv_count)
+    }
+
+    interface OnProductLongClickListener{
+        fun onProductLongClick(productItem: ProductItem)
     }
 }
