@@ -13,13 +13,6 @@ object ProductListRepositoryImpl: ProductListRepository {
 
     private var autoIncrementId = 0
 
-    init {
-        for (i in 0 until 10) {
-            val item = ProductItem("Name$i", i)
-            addProduct(item)
-        }
-    }
-
     override fun addProduct(productItem: ProductItem) {
         if (productItem.id == ProductItem.UNDEFINED_ID){
             productItem.id = autoIncrementId++
