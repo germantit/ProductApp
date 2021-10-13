@@ -86,11 +86,11 @@ class ProductItemViewModel: ViewModel() {
     }
 
     fun resetErrorInputName() {
-        _errorInputName.value =true
+        _errorInputName.value = false
     }
 
     fun resetErrorInputCount() {
-        _errorInputCount.value =true
+        _errorInputCount.value = false
     }
 
     private fun finishWork() {
