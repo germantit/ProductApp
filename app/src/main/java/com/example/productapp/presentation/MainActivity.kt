@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.productapp.R
+import com.example.productapp.presentation.fragments.ProductItemFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         }
         val buttonAddItem = findViewById<FloatingActionButton>(R.id.button_add_product_item)
         buttonAddItem.setOnClickListener {
-            val intent = ProductItemActivity.newIntentAddItem(this)
+            val intent = ProductItemFragment.newIntentAddItem(this)
             startActivity(intent)
         }
     }
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupClickListener() {
         adapter.onProductClickListener = {
             Log.d("MainActivity", it.toString())
-            val intent = ProductItemActivity.newIntentEditItem(this, it.id)
+            val intent = ProductItemFragment.newIntentEditItem(this, it.id)
             startActivity(intent)
         }
     }
