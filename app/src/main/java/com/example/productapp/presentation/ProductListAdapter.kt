@@ -44,8 +44,8 @@ class ProductListAdapter: RecyclerView.Adapter<ProductListAdapter.ProductItemVie
     }
 
     class ProductItemViewHolder(view: View): RecyclerView.ViewHolder(view){
-        val tvName = view.findViewById<TextView>(R.id.tv_name)
-        val tvCount = view.findViewById<TextView>(R.id.tv_count)
+        val tvName: TextView = view.findViewById(R.id.tv_name)
+        val tvCount: TextView = view.findViewById(R.id.tv_count)
     }
 
 }

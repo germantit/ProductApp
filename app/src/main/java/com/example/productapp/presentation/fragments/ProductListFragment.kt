@@ -56,6 +56,7 @@ class ProductListFragment : Fragment() {
             fragmentItem.arguments = bundle
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.product_list_container, fragmentItem)
+                .addToBackStack("main_fragment")
                 .commit()
         }
     }

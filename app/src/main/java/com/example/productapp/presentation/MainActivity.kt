@@ -15,23 +15,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .add(R.id.product_list_container, fragment)
             .commit()
-//        setupRecyclerView()
-//        viewModel = ViewModelProvider(this).get(ProductViewModel::class.java)
-//        viewModel.productList.observe(this) {
-//            adapter.productList = it
-//        }
-
     }
-
-//    private fun setupRecyclerView() {
-//        val rvProductList = findViewById<RecyclerView>(R.id.rv_product_list)
-//        adapter = ProductListAdapter()
-//        rvProductList.adapter = adapter
-//        adapter.onProductLongClickListener = {
-//            viewModel.deleteProductItem(it)
-//        }
-//        setupClickListener()
-//    }
 
     companion object {
         const val EXTRA_SCREEN_MODE = "extra_mode"
