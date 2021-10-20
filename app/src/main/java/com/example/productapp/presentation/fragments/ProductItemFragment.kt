@@ -17,7 +17,7 @@ import com.example.productapp.presentation.MainActivity.Companion.MODE_ADD
 import com.example.productapp.presentation.MainActivity.Companion.MODE_EDIT
 import com.example.productapp.presentation.ProductItemViewModel
 
-class ProductItemFragment() : Fragment() {
+class ProductItemFragment : Fragment() {
 
     private lateinit var viewModel: ProductItemViewModel
     private lateinit var binding: FragmentProductItemBinding
@@ -42,10 +42,6 @@ class ProductItemFragment() : Fragment() {
             MODE_ADD -> startAddMode()
         }
         observeViewModel()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     private fun observeViewModel() {
@@ -102,8 +98,7 @@ class ProductItemFragment() : Fragment() {
             binding.etCount.setText(it.count.toString())
         }
         binding.saveButton.setOnClickListener {
-            viewModel.editProductItem(binding.etName.text?.toString(),
-                binding.etCount.text?.toString())
+            viewModel.editProductItem(binding.etName.text?.toString(), binding.etCount.text?.toString())
         }
     }
 
