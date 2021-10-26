@@ -1,54 +1,42 @@
 package com.example.productapp.data
 
+import android.app.Application
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.MediatorLiveData
+import com.example.productapp.data.database.AppDatabase
 import com.example.productapp.domain.ProductItem
 import com.example.productapp.domain.ProductListRepository
-import java.lang.RuntimeException
 
-object ProductListRepositoryImpl: ProductListRepository {
+class ProductListRepositoryImpl(
+    application: Application
+): ProductListRepository {
 
-    private val productList = sortedSetOf<ProductItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
-    private val productListLD = MutableLiveData<List<ProductItem>>()
+    private val productListDao = AppDatabase.getInstance(application).productListDao()
+    private val mapper = ProductListMapper()
 
-    private var autoIncrementId = 0
 
-    init {
-        for (i in 0 until 10){
-            val item = ProductItem("Name$i",i)
-            addProduct(item)
-        }
+    override suspend fun addProduct(productItem: ProductItem) {
+        productListDao.addProductItem(mapper.mapEntityToDbModel(productItem))
     }
 
-    override fun addProduct(productItem: ProductItem) {
-        if (productItem.id == ProductItem.UNDEFINED_ID){
-            productItem.id = autoIncrementId++
-        }
-        productList.add(productItem)
-        updateList()
+    override suspend fun deleteProductItem(productItem: ProductItem) {
+        productListDao.deleteProductItem(productItem.id)
     }
 
-    override fun deleteProductItem(productItem: ProductItem) {
-        productList.remove(productItem)
-        updateList()
+    override suspend fun editProductItem(productItem: ProductItem) {
+        productListDao.addProductItem(mapper.mapEntityToDbModel(productItem))
     }
 
-    override fun editProductItem(productItem: ProductItem) {
-        val oldElement = getProductItem(productItem.id)
-        productList.remove(oldElement)
-        addProduct(productItem)
-    }
-
-    override fun getProductItem(productItemId: Int): ProductItem {
-        return productList.find {
-            it.id == productItemId } ?: throw RuntimeException("Element with id $productItemId not found")
+    override suspend fun getProductItem(productItemId: Int): ProductItem {
+        val dbModel = productListDao.getProductItem(productItemId)
+        return mapper.mapDbModelToEntity(dbModel)
     }
 
     override fun getProductList(): LiveData<List<ProductItem>> {
-        return productListLD
-    }
-
-    private fun updateList() {
-        productListLD.value = productList.toList()
+        return MediatorLiveData<List<ProductItem>>().apply {
+            addSource(productListDao.getProductList()) {
+                value = mapper.mapListDbModelToListEntity(it)
+            }
+        }
     }
 }
