@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 
 interface ProductListRepository {
 
-    fun addProduct(productItem: ProductItem)
+    suspend fun addProduct(productItem: ProductItem)
 
-    fun deleteProductItem(productItem: ProductItem)
+    suspend fun deleteProductItem(productItem: ProductItem)
 
-    fun editProductItem(productItem: ProductItem)
+    suspend fun editProductItem(productItem: ProductItem)
 
-    fun getProductItem(productItemId: Int) : ProductItem
+    suspend fun getProductItem(productItemId: Int) : ProductItem
 
     fun getProductList(): LiveData<List<ProductItem>>
 }

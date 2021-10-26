@@ -1,15 +1,18 @@
 package com.example.productapp.presentation
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.productapp.data.ProductListRepositoryImpl
 import com.example.productapp.domain.DeleteProductItemUseCase
 import com.example.productapp.domain.EditProductItemUseCase
 import com.example.productapp.domain.GetProductListUseCase
 import com.example.productapp.domain.ProductItem
+import kotlinx.coroutines.*
 
-class ProductViewModel : ViewModel() {
+class ProductViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = ProductListRepositoryImpl
+    private val repository = ProductListRepositoryImpl(application)
 
     private val getProductListUseCase = GetProductListUseCase(repository)
     private val deleteProductItemUseCase = DeleteProductItemUseCase(repository)
@@ -18,6 +21,8 @@ class ProductViewModel : ViewModel() {
     val productList = getProductListUseCase.getProductList()
 
     fun deleteProductItem(productItem: ProductItem) {
-        deleteProductItemUseCase.deleteProductItem(productItem)
+        viewModelScope.launch {
+            deleteProductItemUseCase.deleteProductItem(productItem)
+        }
     }
 }
