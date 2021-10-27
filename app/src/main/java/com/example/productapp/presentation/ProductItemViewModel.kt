@@ -20,6 +20,8 @@ class ProductItemViewModel(application: Application): AndroidViewModel(applicati
     private val addProductUseCase = AddProductUseCase(repository)
     private val editProductItemUseCase = EditProductItemUseCase(repository)
 
+    private val errorCount = 0
+
     private val _errorInputName = MutableLiveData<Boolean>()
     val errorInputName: LiveData<Boolean>
         get() = _errorInputName
@@ -56,14 +58,15 @@ class ProductItemViewModel(application: Application): AndroidViewModel(applicati
         }
     }
 
-    fun editProductItem(inputName: String?, inputCount: String?) {
+    fun editProductItem(inputName: String?, inputCount: String?, defaultCount: String?) {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
-        val fieldsValid = validateInput(name, count)
+        val defCount = parseCount(defaultCount)
+        val fieldsValid = validateInputDifference(name, count, defCount)
         if (fieldsValid) {
             _productItem.value?.let {
                 viewModelScope.launch {
-                    val item = it.copy(name = name, count = count)
+                    val item = it.copy(name = name, count = defCount - count)
                     editProductItemUseCase.editProductItem(item)
                     finishWork()
                 }
@@ -79,8 +82,25 @@ class ProductItemViewModel(application: Application): AndroidViewModel(applicati
         return try {
             inputCount?.trim()?.toInt()?:0
         } catch (e: Exception) {
-            0
+            errorCount
         }
+    }
+
+    private fun validateInputDifference(name: String, count: Int, defCount: Int): Boolean {
+        var result = true
+        if (name.isBlank()) {
+            _errorInputName.value = true
+            result = false
+        }
+        if (count <= 0) {
+            _errorInputCount.value = true
+            result = false
+        }
+        if (count > defCount) {
+            _errorInputCount.value = true
+            result = false
+        }
+        return result
     }
 
     private fun validateInput(name: String, count: Int): Boolean {

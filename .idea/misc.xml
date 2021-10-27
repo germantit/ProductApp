@@ -5,7 +5,8 @@
       <map>
         <entry key="..\:/Users/User/AndroidStudioProjects/ProductApp/app/src/main/res/layout/activity_main.xml" value="0.20199275362318841" />
         <entry key="..\:/Users/User/AndroidStudioProjects/ProductApp/app/src/main/res/layout/activity_product_item.xml" value="0.22735507246376813" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/ProductApp/app/src/main/res/layout/fragment_product_item.xml" value="0.20199275362318841" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/ProductApp/app/src/main/res/layout/fade_in.xml" value="0.19610507246376813" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/ProductApp/app/src/main/res/layout/fragment_product_item.xml" value="0.4" />
         <entry key="..\:/Users/User/AndroidStudioProjects/ProductApp/app/src/main/res/layout/fragment_product_list.xml" value="0.20199275362318841" />
         <entry key="..\:/Users/User/AndroidStudioProjects/ProductApp/app/src/main/res/layout/product_item.xml" value="0.20199275362318841" />
       </map>
