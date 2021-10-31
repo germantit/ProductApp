@@ -58,7 +58,22 @@ class ProductItemViewModel(application: Application): AndroidViewModel(applicati
         }
     }
 
-    fun editProductItem(inputName: String?, inputCount: String?, defaultCount: String?) {
+    fun editProductItem(inputName: String?, inputCount: String?) {
+        val name = parseName(inputName)
+        val count = parseCount(inputCount)
+        val fieldsValid = validateInput(name, count)
+        if (fieldsValid) {
+            _productItem.value?.let {
+                viewModelScope.launch {
+                    val item = it.copy(name = name, count = count)
+                    editProductItemUseCase.editProductItem(item)
+                    finishWork()
+                }
+            }
+        }
+    }
+
+    fun buyProductItem(inputName: String?, inputCount: String?, defaultCount: String?) {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
         val defCount = parseCount(defaultCount)

@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         const val EXTRA_PRODUCT_ITEM_ID = "extra_product_item-id"
         const val MODE_EDIT = 1
         const val MODE_ADD = 0
+        const val MODE_BUY = 2
         const val MODE_UNKNOWN = ""
     }
 }

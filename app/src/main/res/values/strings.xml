@@ -9,4 +9,7 @@
     <string name="error_input_count">Invalid count</string>
     <string name="buy">Buy</string>
     <string name="count_to_buy">How much do you need to buy: </string>
+    <string name="add_mode">Adding</string>
+    <string name="edit_mode">Editing</string>
+    <string name="buy_mode">Buy</string>
 </resources>
