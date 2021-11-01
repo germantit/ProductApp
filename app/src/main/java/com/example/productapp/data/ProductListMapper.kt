@@ -7,13 +7,15 @@ class ProductListMapper {
     fun mapEntityToDbModel(productItem: ProductItem) : ProductItemDbModel = ProductItemDbModel(
         id = productItem.id,
         name = productItem.name,
-        count = productItem.count
+        count = productItem.count,
+        enabled = productItem.enabled
     )
 
     fun mapDbModelToEntity(productItemDbModel: ProductItemDbModel) : ProductItem = ProductItem(
         id = productItemDbModel.id,
         name = productItemDbModel.name,
-        count = productItemDbModel.count
+        count = productItemDbModel.count,
+        enabled = productItemDbModel.enabled
     )
 
     fun mapListDbModelToListEntity(list: List<ProductItemDbModel>) = list.map {
