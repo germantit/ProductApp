@@ -10,7 +10,7 @@ import com.example.productapp.data.ProductItemDbModel
 @Dao
 interface ProductListDao {
 
-    @Query("SELECT * FROM product_items")
+    @Query("SELECT * FROM product_items ORDER BY enabled DESC")
     fun getProductList(): LiveData<List<ProductItemDbModel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
