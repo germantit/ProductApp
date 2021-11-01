@@ -51,6 +51,14 @@ class ProductListFragment : Fragment() {
         val rvProductList = view.findViewById<RecyclerView>(R.id.rv_product_list)
         adapter = ProductListAdapter()
         rvProductList.adapter = adapter
+        rvProductList.recycledViewPool.setMaxRecycledViews(
+            ProductListAdapter.VIEW_ENABLED,
+            ProductListAdapter.MAX_POOL_SIZE
+        )
+        rvProductList.recycledViewPool.setMaxRecycledViews(
+            ProductListAdapter.VIEW_DISABLED,
+            ProductListAdapter.MAX_POOL_SIZE
+        )
         setupClickListener()
         setupLongClickListener()
         setupSwipeListener(rvProductList)
@@ -78,13 +86,7 @@ class ProductListFragment : Fragment() {
 
     private fun setupClickListener() {
         adapter.onProductClickListener = {
-            bundle.putInt(MainActivity.EXTRA_SCREEN_MODE, MainActivity.MODE_BUY)
-            bundle.putInt(MainActivity.EXTRA_PRODUCT_ITEM_ID, it.id)
-            fragmentItem.arguments = bundle
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.product_list_container, fragmentItem)
-                .addToBackStack("main_fragment")
-                .commit()
+            viewModel.changeEnableState(it)
         }
     }
 

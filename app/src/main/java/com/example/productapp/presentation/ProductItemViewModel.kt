@@ -6,9 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.productapp.data.ProductListRepositoryImpl
-import com.example.productapp.domain.AddProductUseCase
-import com.example.productapp.domain.EditProductItemUseCase
-import com.example.productapp.domain.GetProductItemUseCase
+import com.example.productapp.domain.usecase.AddProductUseCase
+import com.example.productapp.domain.usecase.EditProductItemUseCase
+import com.example.productapp.domain.usecase.GetProductItemUseCase
 import com.example.productapp.domain.ProductItem
 import kotlinx.coroutines.launch
 
@@ -51,7 +51,7 @@ class ProductItemViewModel(application: Application): AndroidViewModel(applicati
         val fieldsValid = validateInput(name, count)
         if (fieldsValid) {
             viewModelScope.launch {
-                val productItem = ProductItem(name, count)
+                val productItem = ProductItem(name, count, enabled = true)
                 addProductUseCase.addProduct(productItem)
                 finishWork()
             }
@@ -73,22 +73,6 @@ class ProductItemViewModel(application: Application): AndroidViewModel(applicati
         }
     }
 
-    fun buyProductItem(inputName: String?, inputCount: String?, defaultCount: String?) {
-        val name = parseName(inputName)
-        val count = parseCount(inputCount)
-        val defCount = parseCount(defaultCount)
-        val fieldsValid = validateInputDifference(name, count, defCount)
-        if (fieldsValid) {
-            _productItem.value?.let {
-                viewModelScope.launch {
-                    val item = it.copy(name = name, count = defCount - count)
-                    editProductItemUseCase.editProductItem(item)
-                    finishWork()
-                }
-            }
-        }
-    }
-
     private fun parseName(inputName: String?): String {
         return inputName?.trim() ?: ""
     }
@@ -99,23 +83,6 @@ class ProductItemViewModel(application: Application): AndroidViewModel(applicati
         } catch (e: Exception) {
             errorCount
         }
-    }
-
-    private fun validateInputDifference(name: String, count: Int, defCount: Int): Boolean {
-        var result = true
-        if (name.isBlank()) {
-            _errorInputName.value = true
-            result = false
-        }
-        if (count <= 0) {
-            _errorInputCount.value = true
-            result = false
-        }
-        if (count > defCount) {
-            _errorInputCount.value = true
-            result = false
-        }
-        return result
     }
 
     private fun validateInput(name: String, count: Int): Boolean {

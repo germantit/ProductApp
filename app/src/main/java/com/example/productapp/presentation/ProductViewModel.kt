@@ -4,9 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.productapp.data.ProductListRepositoryImpl
-import com.example.productapp.domain.DeleteProductItemUseCase
-import com.example.productapp.domain.EditProductItemUseCase
-import com.example.productapp.domain.GetProductListUseCase
+import com.example.productapp.domain.usecase.DeleteProductItemUseCase
+import com.example.productapp.domain.usecase.EditProductItemUseCase
+import com.example.productapp.domain.usecase.GetProductListUseCase
 import com.example.productapp.domain.ProductItem
 import kotlinx.coroutines.*
 
@@ -23,6 +23,13 @@ class ProductViewModel(application: Application) : AndroidViewModel(application)
     fun deleteProductItem(productItem: ProductItem) {
         viewModelScope.launch {
             deleteProductItemUseCase.deleteProductItem(productItem)
+        }
+    }
+
+    fun changeEnableState(productItem: ProductItem) {
+        viewModelScope.launch {
+            val newItem = productItem.copy(enabled = !productItem.enabled)
+            editProductItemUseCase.editProductItem(newItem)
         }
     }
 }

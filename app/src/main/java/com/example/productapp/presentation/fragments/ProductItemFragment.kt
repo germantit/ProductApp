@@ -14,7 +14,6 @@ import com.example.productapp.domain.ProductItem
 import com.example.productapp.presentation.MainActivity.Companion.EXTRA_PRODUCT_ITEM_ID
 import com.example.productapp.presentation.MainActivity.Companion.EXTRA_SCREEN_MODE
 import com.example.productapp.presentation.MainActivity.Companion.MODE_ADD
-import com.example.productapp.presentation.MainActivity.Companion.MODE_BUY
 import com.example.productapp.presentation.MainActivity.Companion.MODE_EDIT
 import com.example.productapp.presentation.ProductItemViewModel
 
@@ -41,7 +40,6 @@ class ProductItemFragment : Fragment() {
         when (screenMode) {
             MODE_EDIT -> startEditMode(productItemId)
             MODE_ADD -> startAddMode()
-            MODE_BUY -> startBuyMode(productItemId)
         }
         observeViewModel()
     }
@@ -109,42 +107,26 @@ class ProductItemFragment : Fragment() {
 
     private fun startAddMode() {
         binding.tvCountInStockLabel.visibility = View.INVISIBLE
+        binding.etName.setText(DEFAULT_NAME)
+        binding.etCount.setText(DEFAULT_COUNT.toString())
         binding.tvMode.text = getString(R.string.add_mode)
-        viewModel.productItem.observe(viewLifecycleOwner) {
-            binding.etName.setText("")
-            binding.etCount.setText("")
-        }
         binding.saveButton.setOnClickListener {
             viewModel.addProductItem(binding.etName.text?.toString(),
                 binding.etCount.text?.toString())
         }
     }
 
-    private fun startBuyMode(productItemId: Int?) {
-        binding.tvCountInStockLabel.visibility = View.VISIBLE
-        binding.tvMode.text = getString(R.string.buy_mode)
-        productItemId?.let { viewModel.getProductItem(it) }
-        viewModel.productItem.observe(viewLifecycleOwner) {
-            binding.etName.setText(it.name)
-            binding.etCount.setText("")
-            binding.tvCountInStock.text = it.count.toString()
-            binding.saveButton.setText(R.string.buy)
-        }
-        binding.saveButton.setOnClickListener {
-            viewModel.buyProductItem(binding.etName.text?.toString(),
-                binding.etCount.text?.toString(), binding.tvCountInStock.text.toString())
-        }
-    }
-
     private fun parseParams(screenMode: Int, productItemId: Int? = ProductItem.UNDEFINED_ID) {
-        if (screenMode != MODE_ADD && screenMode != MODE_EDIT && screenMode != MODE_BUY) {
+        if (screenMode != MODE_ADD && screenMode != MODE_EDIT) {
             throw RuntimeException("Param screen mode is absent")
         }
         if (screenMode == MODE_EDIT && productItemId == ProductItem.UNDEFINED_ID) {
             throw RuntimeException("Param product item id is absent")
         }
-        if (screenMode == MODE_BUY && productItemId == ProductItem.UNDEFINED_ID) {
-            throw RuntimeException("Param product item id is absent")
-        }
+    }
+
+    companion object {
+        private const val DEFAULT_NAME = ""
+        private const val DEFAULT_COUNT = 0
     }
 }
