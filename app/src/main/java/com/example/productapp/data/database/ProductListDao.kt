@@ -21,4 +21,7 @@ interface ProductListDao {
 
     @Query("SELECT * FROM product_items WHERE id=:productItemId LIMIT 1")
     suspend fun getProductItem(productItemId: Int): ProductItemDbModel
+
+    @Query("SELECT * FROM product_items WHERE name LIKE :searchQuery")
+    fun searchDatabase(searchQuery: String): LiveData<List<ProductItemDbModel>>
 }

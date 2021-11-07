@@ -5,11 +5,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.productapp.data.ProductItemDbModel
 import com.example.productapp.data.ProductListRepositoryImpl
 import com.example.productapp.domain.usecase.AddProductUseCase
 import com.example.productapp.domain.usecase.EditProductItemUseCase
 import com.example.productapp.domain.usecase.GetProductItemUseCase
 import com.example.productapp.domain.ProductItem
+import com.example.productapp.domain.usecase.SearchQueryUseCase
 import kotlinx.coroutines.launch
 
 class ProductItemViewModel(application: Application): AndroidViewModel(application) {
@@ -19,6 +21,7 @@ class ProductItemViewModel(application: Application): AndroidViewModel(applicati
     private val getProductItemUseCase = GetProductItemUseCase(repository)
     private val addProductUseCase = AddProductUseCase(repository)
     private val editProductItemUseCase = EditProductItemUseCase(repository)
+    private val searchQueryUseCase = SearchQueryUseCase(repository)
 
     private val errorCount = 0
 
@@ -71,6 +74,10 @@ class ProductItemViewModel(application: Application): AndroidViewModel(applicati
                 }
             }
         }
+    }
+
+    fun searchDatabase(searchQuery: String): LiveData<List<ProductItem>> {
+        return searchQueryUseCase.searchQuery(searchQuery)
     }
 
     private fun parseName(inputName: String?): String {

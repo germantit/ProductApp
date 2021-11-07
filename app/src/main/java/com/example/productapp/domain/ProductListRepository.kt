@@ -12,5 +12,7 @@ interface ProductListRepository {
 
     suspend fun getProductItem(productItemId: Int) : ProductItem
 
+    fun searchDatabase(searchQuery: String): LiveData<List<ProductItem>>
+
     fun getProductList(): LiveData<List<ProductItem>>
 }

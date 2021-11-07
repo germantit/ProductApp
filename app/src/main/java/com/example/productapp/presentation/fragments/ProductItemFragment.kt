@@ -6,8 +6,11 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.productapp.R
 import com.example.productapp.databinding.FragmentProductItemBinding
 import com.example.productapp.domain.ProductItem
@@ -16,10 +19,12 @@ import com.example.productapp.presentation.MainActivity.Companion.EXTRA_SCREEN_M
 import com.example.productapp.presentation.MainActivity.Companion.MODE_ADD
 import com.example.productapp.presentation.MainActivity.Companion.MODE_EDIT
 import com.example.productapp.presentation.ProductItemViewModel
+import com.example.productapp.presentation.SearchAdapter
 
-class ProductItemFragment : Fragment() {
+class ProductItemFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private lateinit var viewModel: ProductItemViewModel
+    private lateinit var searchAdapter: SearchAdapter
     private lateinit var binding: FragmentProductItemBinding
 
     override fun onCreateView(
@@ -32,6 +37,8 @@ class ProductItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.rvSearchName.layoutManager = GridLayoutManager(context, 2)
+        binding.rvSearchName.adapter = searchAdapter
         val screenMode = arguments?.getInt(EXTRA_SCREEN_MODE)
         val productItemId = arguments?.getInt(EXTRA_PRODUCT_ITEM_ID)
         screenMode?.let { parseParams(it, productItemId) }
@@ -128,5 +135,24 @@ class ProductItemFragment : Fragment() {
     companion object {
         private const val DEFAULT_NAME = ""
         private const val DEFAULT_COUNT = 0
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return true
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        if(newText != null) searchDatabase(newText)
+        return true
+    }
+
+    private fun searchDatabase(query: String) {
+        val searchQuery = "%$query%"
+
+        viewModel.searchDatabase(searchQuery).observe(this, { list ->
+            list.let {
+                searchAdapter.setData(it)
+            }
+        })
     }
 }

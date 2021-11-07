@@ -39,4 +39,13 @@ class ProductListRepositoryImpl(
             }
         }
     }
+
+    override fun searchDatabase(searchQuery: String): LiveData<List<ProductItem>> {
+        val newList = productListDao.searchDatabase(searchQuery)
+        return MediatorLiveData<List<ProductItem>>().apply {
+            addSource(newList) {
+                value = mapper.mapListDbModelToListEntity(it)
+            }
+        }
+    }
 }
