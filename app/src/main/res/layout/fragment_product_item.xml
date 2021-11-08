@@ -56,24 +56,6 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/tvCountInStockLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:text="@string/count_to_buy"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_count" />
-
-    <TextView
-        android:id="@+id/tvCountInStock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:layout_constraintStart_toEndOf="@+id/tvCountInStockLabel"
-        app:layout_constraintTop_toBottomOf="@+id/til_count" />
-
-    <TextView
         android:id="@+id/tvMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -85,11 +67,10 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_search_name"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/til_count"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_name"
-        app:layout_constraintBottom_toTopOf="@+id/til_count"/>
+        app:layout_constraintTop_toBottomOf="@+id/til_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

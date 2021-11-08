@@ -6,11 +6,9 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.productapp.R
 import com.example.productapp.databinding.FragmentProductItemBinding
 import com.example.productapp.domain.ProductItem
@@ -21,7 +19,7 @@ import com.example.productapp.presentation.MainActivity.Companion.MODE_EDIT
 import com.example.productapp.presentation.ProductItemViewModel
 import com.example.productapp.presentation.SearchAdapter
 
-class ProductItemFragment : Fragment(), SearchView.OnQueryTextListener {
+class ProductItemFragment : Fragment() {
 
     private lateinit var viewModel: ProductItemViewModel
     private lateinit var searchAdapter: SearchAdapter
@@ -38,6 +36,7 @@ class ProductItemFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.rvSearchName.layoutManager = GridLayoutManager(context, 2)
+        searchAdapter = SearchAdapter()
         binding.rvSearchName.adapter = searchAdapter
         val screenMode = arguments?.getInt(EXTRA_SCREEN_MODE)
         val productItemId = arguments?.getInt(EXTRA_PRODUCT_ITEM_ID)
@@ -99,7 +98,6 @@ class ProductItemFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun startEditMode(productItemId: Int?) {
-        binding.tvCountInStockLabel.visibility = View.INVISIBLE
         binding.tvMode.text = getString(R.string.edit_mode)
         productItemId?.let { viewModel.getProductItem(it) }
         viewModel.productItem.observe(viewLifecycleOwner) {
@@ -113,14 +111,36 @@ class ProductItemFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun startAddMode() {
-        binding.tvCountInStockLabel.visibility = View.INVISIBLE
         binding.etName.setText(DEFAULT_NAME)
-        binding.etCount.setText(DEFAULT_COUNT.toString())
+        binding.etCount.setText(DEFAULT_COUNT)
         binding.tvMode.text = getString(R.string.add_mode)
+        binding.etName.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s != null && s.length > 1) {
+                    val searchQuery = s.toString()
+
+                    viewModel.searchDatabase(searchQuery).observe(viewLifecycleOwner, { list ->
+                        list.let {
+                            searchAdapter.setData(it)
+                        }
+                    })
+                } else {
+                    searchAdapter.setData(DEF_LIST)
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+        })
         binding.saveButton.setOnClickListener {
             viewModel.addProductItem(binding.etName.text?.toString(),
                 binding.etCount.text?.toString())
         }
+
     }
 
     private fun parseParams(screenMode: Int, productItemId: Int? = ProductItem.UNDEFINED_ID) {
@@ -134,25 +154,7 @@ class ProductItemFragment : Fragment(), SearchView.OnQueryTextListener {
 
     companion object {
         private const val DEFAULT_NAME = ""
-        private const val DEFAULT_COUNT = 0
-    }
-
-    override fun onQueryTextSubmit(query: String?): Boolean {
-        return true
-    }
-
-    override fun onQueryTextChange(newText: String?): Boolean {
-        if(newText != null) searchDatabase(newText)
-        return true
-    }
-
-    private fun searchDatabase(query: String) {
-        val searchQuery = "%$query%"
-
-        viewModel.searchDatabase(searchQuery).observe(this, { list ->
-            list.let {
-                searchAdapter.setData(it)
-            }
-        })
+        private const val DEFAULT_COUNT = ""
+        private val DEF_LIST = emptyList<ProductItem>()
     }
 }

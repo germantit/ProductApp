@@ -21,7 +21,7 @@ class ProductListFragment : Fragment() {
     private lateinit var binding: FragmentProductListBinding
 
     private val bundle = Bundle()
-    private val fragmentItem = ProductItemFragment()
+//    private val fragmentItem = ProductItemFragment()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -38,9 +38,8 @@ class ProductListFragment : Fragment() {
         }
         binding.buttonAddProductItem.setOnClickListener {
             bundle.putInt(MainActivity.EXTRA_SCREEN_MODE, MainActivity.MODE_ADD)
-            fragmentItem.arguments = bundle
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.product_list_container, fragmentItem)
+                .replace(R.id.product_list_container, ProductItemFragment().apply { arguments = bundle })
                 .addToBackStack("main_fragment")
                 .commit()
         }
@@ -94,9 +93,8 @@ class ProductListFragment : Fragment() {
         adapter.onProductLongClickListener = {
             bundle.putInt(MainActivity.EXTRA_SCREEN_MODE, MainActivity.MODE_EDIT)
             bundle.putInt(MainActivity.EXTRA_PRODUCT_ITEM_ID, it.id)
-            fragmentItem.arguments = bundle
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.product_list_container, fragmentItem)
+                .replace(R.id.product_list_container, ProductItemFragment().apply { arguments = bundle })
                 .addToBackStack("main_fragment")
                 .commit()
         }
