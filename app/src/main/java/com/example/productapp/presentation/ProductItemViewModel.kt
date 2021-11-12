@@ -5,13 +5,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.productapp.data.ProductItemDbModel
 import com.example.productapp.data.ProductListRepositoryImpl
-import com.example.productapp.domain.usecase.AddProductUseCase
-import com.example.productapp.domain.usecase.EditProductItemUseCase
-import com.example.productapp.domain.usecase.GetProductItemUseCase
 import com.example.productapp.domain.ProductItem
-import com.example.productapp.domain.usecase.SearchQueryUseCase
+import com.example.productapp.domain.UniqueProduct
+import com.example.productapp.domain.usecase.*
 import kotlinx.coroutines.launch
 
 class ProductItemViewModel(application: Application): AndroidViewModel(application) {
@@ -20,6 +17,7 @@ class ProductItemViewModel(application: Application): AndroidViewModel(applicati
 
     private val getProductItemUseCase = GetProductItemUseCase(repository)
     private val addProductUseCase = AddProductUseCase(repository)
+    private val addUniqueProductUseCase = AddUniqueProductUseCase(repository)
     private val editProductItemUseCase = EditProductItemUseCase(repository)
     private val searchQueryUseCase = SearchQueryUseCase(repository)
 
@@ -61,6 +59,18 @@ class ProductItemViewModel(application: Application): AndroidViewModel(applicati
         }
     }
 
+    fun addUniqueProduct(inputName: String?) {
+        val name = parseName(inputName)
+        val fieldsValid = validateInput(name)
+        if (fieldsValid) {
+            viewModelScope.launch {
+                val uniqueProduct = UniqueProduct(item = name)
+                addUniqueProductUseCase.addUniqueProduct(uniqueProduct)
+                finishWork()
+            }
+        }
+    }
+
     fun editProductItem(inputName: String?, inputCount: String?) {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
@@ -76,7 +86,7 @@ class ProductItemViewModel(application: Application): AndroidViewModel(applicati
         }
     }
 
-    fun searchDatabase(searchQuery: String): LiveData<List<ProductItem>> {
+    fun searchDatabase(searchQuery: String): LiveData<List<UniqueProduct>> {
         return searchQueryUseCase.searchQuery(searchQuery)
     }
 
@@ -100,6 +110,15 @@ class ProductItemViewModel(application: Application): AndroidViewModel(applicati
         }
         if (count <= 0) {
             _errorInputCount.value = true
+            result = false
+        }
+        return result
+    }
+
+    private fun validateInput(name: String): Boolean {
+        var result = true
+        if (name.isBlank()) {
+            _errorInputName.value = true
             result = false
         }
         return result

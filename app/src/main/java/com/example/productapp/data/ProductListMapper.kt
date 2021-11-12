@@ -1,6 +1,7 @@
 package com.example.productapp.data
 
 import com.example.productapp.domain.ProductItem
+import com.example.productapp.domain.UniqueProduct
 
 class ProductListMapper {
 
@@ -20,5 +21,23 @@ class ProductListMapper {
 
     fun mapListDbModelToListEntity(list: List<ProductItemDbModel>) = list.map {
         mapDbModelToEntity(it)
+    }
+
+    fun mapUniqueEntityToUniqueDbModel(uniqueProduct: UniqueProduct) : UniqueProductDBModel =
+        UniqueProductDBModel(
+            id = uniqueProduct.id,
+            item = uniqueProduct.item,
+            useCount = uniqueProduct.useCount
+        )
+
+    private fun mapUniqueDbModelToUniqueEntity(uniqueProductDBModel: UniqueProductDBModel) : UniqueProduct =
+        UniqueProduct(
+                id = uniqueProductDBModel.id,
+                item = uniqueProductDBModel.item,
+                useCount = uniqueProductDBModel.useCount
+            )
+
+    fun mapListUniqueDbModelToListUniqueEntity(list: List<UniqueProductDBModel>) = list.map {
+        mapUniqueDbModelToUniqueEntity(it)
     }
 }

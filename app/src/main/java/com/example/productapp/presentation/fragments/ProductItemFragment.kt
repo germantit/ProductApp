@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.productapp.R
 import com.example.productapp.databinding.FragmentProductItemBinding
 import com.example.productapp.domain.ProductItem
+import com.example.productapp.domain.UniqueProduct
 import com.example.productapp.presentation.MainActivity.Companion.EXTRA_PRODUCT_ITEM_ID
 import com.example.productapp.presentation.MainActivity.Companion.EXTRA_SCREEN_MODE
 import com.example.productapp.presentation.MainActivity.Companion.MODE_ADD
@@ -131,7 +132,7 @@ class ProductItemFragment : Fragment() {
                     searchAdapter.setData(DEF_LIST)
                 }
                 searchAdapter.onProductClickListener = {
-                    binding.etName.setText(it.name)
+                    binding.etName.setText(it.item)
                     searchAdapter.setData(DEF_LIST)
                 }
             }
@@ -143,6 +144,7 @@ class ProductItemFragment : Fragment() {
         binding.saveButton.setOnClickListener {
             viewModel.addProductItem(binding.etName.text?.toString(),
                 binding.etCount.text?.toString())
+            viewModel.addUniqueProduct((binding.etName.text?.toString()))
         }
     }
 
@@ -158,6 +160,6 @@ class ProductItemFragment : Fragment() {
     companion object {
         private const val DEFAULT_NAME = ""
         private const val DEFAULT_COUNT = ""
-        private val DEF_LIST = emptyList<ProductItem>()
+        private val DEF_LIST = emptyList<UniqueProduct>()
     }
 }

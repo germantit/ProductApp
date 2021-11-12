@@ -6,6 +6,7 @@ import androidx.lifecycle.MediatorLiveData
 import com.example.productapp.data.database.AppDatabase
 import com.example.productapp.domain.ProductItem
 import com.example.productapp.domain.ProductListRepository
+import com.example.productapp.domain.UniqueProduct
 
 class ProductListRepositoryImpl(
     application: Application
@@ -17,6 +18,16 @@ class ProductListRepositoryImpl(
 
     override suspend fun addProduct(productItem: ProductItem) {
         productListDao.addProductItem(mapper.mapEntityToDbModel(productItem))
+    }
+
+    override suspend fun addUniqueProduct(uniqueProduct: UniqueProduct) {
+        val addedItemCount = productListDao.addUniqueProduct(
+            mapper.mapUniqueEntityToUniqueDbModel(uniqueProduct)
+        ).toString()
+        if (addedItemCount.toInt() < 1){
+            uniqueProduct.useCount.inc()
+            productListDao.updateUniqueProduct(mapper.mapUniqueEntityToUniqueDbModel(uniqueProduct))
+        }
     }
 
     override suspend fun deleteProductItem(productItem: ProductItem) {
@@ -40,11 +51,19 @@ class ProductListRepositoryImpl(
         }
     }
 
-    override fun searchDatabase(searchQuery: String): LiveData<List<ProductItem>> {
+    override fun getUniqueProductList(): LiveData<List<UniqueProduct>> {
+        return MediatorLiveData<List<UniqueProduct>>().apply {
+            addSource(productListDao.getUniqueProductList()) {
+                value = mapper.mapListUniqueDbModelToListUniqueEntity(it)
+            }
+        }
+    }
+
+    override fun searchDatabase(searchQuery: String): LiveData<List<UniqueProduct>> {
         val newList = productListDao.searchDatabase("%$searchQuery%")
-        return MediatorLiveData<List<ProductItem>>().apply {
+        return MediatorLiveData<List<UniqueProduct>>().apply {
             addSource(newList) {
-                value = mapper.mapListDbModelToListEntity(it)
+                value = mapper.mapListUniqueDbModelToListUniqueEntity(it)
             }
         }
     }

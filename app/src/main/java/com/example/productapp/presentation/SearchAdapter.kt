@@ -6,13 +6,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.productapp.R
-import com.example.productapp.domain.ProductItem
+import com.example.productapp.domain.UniqueProduct
 
 class SearchAdapter: RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
-    private var oldData = emptyList<ProductItem>()
+    private var oldData = emptyList<UniqueProduct>()
 
-    var onProductClickListener: ((ProductItem) -> Unit)? = null
+    var onProductClickListener: ((UniqueProduct) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         return SearchViewHolder(LayoutInflater.from(parent.context).inflate(
@@ -23,7 +23,7 @@ class SearchAdapter: RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
-        holder.tvSearch.text = oldData[position].name
+        holder.tvSearch.text = oldData[position].item
         holder.itemView.setOnClickListener {
             onProductClickListener?.invoke(oldData[position])
         }
@@ -37,7 +37,7 @@ class SearchAdapter: RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
         val tvSearch: TextView = view.findViewById(R.id.tvSearchName)
     }
 
-    fun setData(newData: List<ProductItem>){
+    fun setData(newData: List<UniqueProduct>){
         oldData = newData
         notifyDataSetChanged()
     }
