@@ -130,6 +130,10 @@ class ProductItemFragment : Fragment() {
                 } else {
                     searchAdapter.setData(DEF_LIST)
                 }
+                searchAdapter.onProductClickListener = {
+                    binding.etName.setText(it.name)
+                    searchAdapter.setData(DEF_LIST)
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -140,7 +144,6 @@ class ProductItemFragment : Fragment() {
             viewModel.addProductItem(binding.etName.text?.toString(),
                 binding.etCount.text?.toString())
         }
-
     }
 
     private fun parseParams(screenMode: Int, productItemId: Int? = ProductItem.UNDEFINED_ID) {

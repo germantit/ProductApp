@@ -12,6 +12,8 @@ class SearchAdapter: RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
     private var oldData = emptyList<ProductItem>()
 
+    var onProductClickListener: ((ProductItem) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         return SearchViewHolder(LayoutInflater.from(parent.context).inflate(
             R.layout.search_item,
@@ -22,6 +24,9 @@ class SearchAdapter: RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         holder.tvSearch.text = oldData[position].name
+        holder.itemView.setOnClickListener {
+            onProductClickListener?.invoke(oldData[position])
+        }
     }
 
     override fun getItemCount(): Int {

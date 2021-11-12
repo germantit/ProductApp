@@ -21,7 +21,6 @@ class ProductListFragment : Fragment() {
     private lateinit var binding: FragmentProductListBinding
 
     private val bundle = Bundle()
-//    private val fragmentItem = ProductItemFragment()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
