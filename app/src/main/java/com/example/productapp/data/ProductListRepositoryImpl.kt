@@ -21,13 +21,9 @@ class ProductListRepositoryImpl(
     }
 
     override suspend fun addUniqueProduct(uniqueProduct: UniqueProduct) {
-        val addedItemCount = productListDao.addUniqueProduct(
-            mapper.mapUniqueEntityToUniqueDbModel(uniqueProduct)
-        ).toString()
-        if (addedItemCount.toInt() < 1){
-            uniqueProduct.useCount.inc()
-            productListDao.updateUniqueProduct(mapper.mapUniqueEntityToUniqueDbModel(uniqueProduct))
-        }
+        productListDao.insertOrReplace(
+            mapper.mapUniqueEntityToUniqueDbModel(uniqueProduct).item
+        )
     }
 
     override suspend fun deleteProductItem(productItem: ProductItem) {

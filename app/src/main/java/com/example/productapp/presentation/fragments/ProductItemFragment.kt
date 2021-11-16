@@ -19,6 +19,7 @@ import com.example.productapp.presentation.MainActivity.Companion.MODE_ADD
 import com.example.productapp.presentation.MainActivity.Companion.MODE_EDIT
 import com.example.productapp.presentation.ProductItemViewModel
 import com.example.productapp.presentation.SearchAdapter
+import java.util.*
 
 class ProductItemFragment : Fragment() {
 
@@ -125,6 +126,7 @@ class ProductItemFragment : Fragment() {
 
                     viewModel.searchDatabase(searchQuery).observe(viewLifecycleOwner, { list ->
                         list.let {
+                            Collections.sort(it)
                             searchAdapter.setData(it)
                         }
                     })
@@ -144,7 +146,9 @@ class ProductItemFragment : Fragment() {
         binding.saveButton.setOnClickListener {
             viewModel.addProductItem(binding.etName.text?.toString(),
                 binding.etCount.text?.toString())
-            viewModel.addUniqueProduct((binding.etName.text?.toString()))
+            viewModel.addUniqueProduct((binding.etName.text?.toString()),
+                binding.etCount.text?.toString()
+            )
         }
     }
 

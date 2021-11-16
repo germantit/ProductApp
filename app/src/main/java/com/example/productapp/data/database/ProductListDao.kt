@@ -11,17 +11,17 @@ interface ProductListDao {
     @Query("SELECT * FROM product_items ORDER BY enabled DESC")
     fun getProductList(): LiveData<List<ProductItemDbModel>>
 
-    @Query("SELECT * FROM unique_item ORDER BY useCount DESC")
+    @Query("SELECT * FROM unique_item")
     fun getUniqueProductList(): LiveData<List<UniqueProductDBModel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addProductItem(productItemDbModel: ProductItemDbModel)
 
-    @Insert
-    suspend fun addUniqueProduct(uniqueProductDBModel: UniqueProductDBModel)
+    @Query("INSERT OR REPLACE INTO unique_item VALUES(:item,coalesce((SELECT useCount FROM unique_item WHERE item = :item),-1) + 1)")
+    suspend fun insertOrReplace(item: String)
 
-    @Update
-    suspend fun updateUniqueProduct(uniqueProductDBModel: UniqueProductDBModel)
+    @Query("UPDATE unique_item SET useCount = useCount + 1 WHERE item = :item")
+    suspend fun updateUniqueProduct(item: String)
 
     @Query("DELETE FROM product_items WHERE id=:productItemId")
     suspend fun deleteProductItem(productItemId: Int)
@@ -31,6 +31,4 @@ interface ProductListDao {
 
     @Query("SELECT * FROM unique_item WHERE item LIKE :searchQuery")
     fun searchDatabase(searchQuery: String): LiveData<List<UniqueProductDBModel>>
-
-
 }

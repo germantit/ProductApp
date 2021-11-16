@@ -59,9 +59,10 @@ class ProductItemViewModel(application: Application): AndroidViewModel(applicati
         }
     }
 
-    fun addUniqueProduct(inputName: String?) {
+    fun addUniqueProduct(inputName: String?, inputCount: String?) {
         val name = parseName(inputName)
-        val fieldsValid = validateInput(name)
+        val count = parseCount(inputCount)
+        val fieldsValid = validateInput(name, count)
         if (fieldsValid) {
             viewModelScope.launch {
                 val uniqueProduct = UniqueProduct(item = name)
@@ -110,15 +111,6 @@ class ProductItemViewModel(application: Application): AndroidViewModel(applicati
         }
         if (count <= 0) {
             _errorInputCount.value = true
-            result = false
-        }
-        return result
-    }
-
-    private fun validateInput(name: String): Boolean {
-        var result = true
-        if (name.isBlank()) {
-            _errorInputName.value = true
             result = false
         }
         return result

@@ -25,14 +25,12 @@ class ProductListMapper {
 
     fun mapUniqueEntityToUniqueDbModel(uniqueProduct: UniqueProduct) : UniqueProductDBModel =
         UniqueProductDBModel(
-            id = uniqueProduct.id,
             item = uniqueProduct.item,
             useCount = uniqueProduct.useCount
         )
 
     private fun mapUniqueDbModelToUniqueEntity(uniqueProductDBModel: UniqueProductDBModel) : UniqueProduct =
         UniqueProduct(
-                id = uniqueProductDBModel.id,
                 item = uniqueProductDBModel.item,
                 useCount = uniqueProductDBModel.useCount
             )

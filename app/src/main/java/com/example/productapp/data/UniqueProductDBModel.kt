@@ -7,8 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "unique_item", indices = [Index(value = ["item"], unique = true)])
 data class UniqueProductDBModel(
-    @PrimaryKey(autoGenerate = true)
-    var id: Int,
+    @PrimaryKey
     @ColumnInfo(name = "item") val item: String,
     val useCount: Int
 )
