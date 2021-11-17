@@ -146,7 +146,7 @@ class ProductItemFragment : Fragment() {
         binding.saveButton.setOnClickListener {
             viewModel.addProductItem(binding.etName.text?.toString(),
                 binding.etCount.text?.toString())
-            viewModel.addUniqueProduct((binding.etName.text?.toString()),
+            viewModel.addUniqueProduct((highRegister(binding.etName.text?.toString())),
                 binding.etCount.text?.toString()
             )
         }
@@ -159,6 +159,11 @@ class ProductItemFragment : Fragment() {
         if (screenMode == MODE_EDIT && productItemId == ProductItem.UNDEFINED_ID) {
             throw RuntimeException("Param product item id is absent")
         }
+    }
+
+    private fun highRegister(item: String?): String {
+        return item?.substring(0,1)?.uppercase(Locale.getDefault()) + item?.substring(1)
+            ?.lowercase(Locale.getDefault())
     }
 
     companion object {
